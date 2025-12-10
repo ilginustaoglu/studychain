@@ -1,0 +1,30 @@
+.navbar {
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+.brand {
+    font-weight: 800;
+    text-transform: lowercase;
+    color: var(--text);
+}
+.navbar-right { display: flex; gap: 8px; align-items: center; }
+
+.avatar {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	object-fit: cover;
+	border: 1px solid var(--border);
+	display: block;
+	background: #e5e5e5;
+}
+
+

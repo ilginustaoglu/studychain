@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title th:text="${collection.name + ' • Study'}">Flashcards • Study</title>
+	<link rel="stylesheet" href="/css/base.css">
+	<link rel="stylesheet" href="/css/navbar.css">
+	<style>
+		/* 3D flip animation */
+		.study-wrap { max-width: 1200px; margin: 16px auto; padding: 0 12px; perspective: 1000px; }
+		.study-center { min-height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+		.flashcard {
+			border: 1px solid var(--border, #e0e0e0);
+			border-radius: 12px;
+			min-height: clamp(320px, 55vh, 800px);
+			padding: 16px;
+			width: 100%;
+			position: relative;
+			transform-style: preserve-3d;
+			transition: transform 0.4s ease, box-shadow 0.2s ease, background 0.2s ease;
+			background: var(--surface, #fff);
+			box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+			cursor: pointer;
+		}
+		.flashcard:hover { box-shadow: 0 10px 24px rgba(0,0,0,0.08); }
+		.flashcard .face {
+			position: absolute;
+			inset: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 12px;
+			white-space: pre-wrap;
+			backface-visibility: hidden;
+			-webkit-backface-visibility: hidden;
+			border-radius: 12px;
+		}
+		.flashcard .front { transform: rotateY(0deg); }
+		.flashcard .back { transform: rotateY(180deg); }
+		.flashcard.show-front { transform: rotateY(0deg); }
+		.flashcard.show-back { transform: rotateY(180deg); }
+
+		/* Controls */
+		.study-controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+		.muted { color: var(--muted,#666); }
+	</style>
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="study-wrap">
+	<a class="btn" th:href="@{|/flashcards/collections/${collection.id}|}">← Back to Collection</a>
+	<h1 th:text="${collection.name}">Study</h1>
+	<div class="muted" th:if="${collection.description}" th:text="${collection.description}" style="margin-bottom: 16px;">desc</div>
+
+	<div class="study-center">
+		<div id="card" class="flashcard show-front" role="button" aria-label="Flashcard">
+			<div class="face front">Front</div>
+			<div class="face back">Back</div>
+		</div>
+		<div class="study-controls">
+			<span id="progress" class="muted">1 / 1</span>
+			<button id="prevBtn" class="btn">Prev</button>
+			<button id="flipBtn" class="btn btn-primary">Flip</button>
+			<button id="nextBtn" class="btn">Next</button>
+		</div>
+	</div>
+
+	<ul id="cardsData" hidden>
+		<li th:each="c : ${cards}" th:data-front="${c.frontText}" th:data-back="${c.backText}"></li>
+	</ul>
+</main>
+<script src="/js/flashcards-study.js"></script>
+</body>
+</html>
+
+

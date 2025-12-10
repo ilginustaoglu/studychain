@@ -1,0 +1,39 @@
+.timers {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+    max-width: 320px;
+    justify-self: start;
+    align-self: start;
+    width: fit-content;
+}
+.timer-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin: 12px 0;
+}
+.time-display {
+    font-size: 28px;
+    font-weight: 700;
+    padding: 8px;
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    text-align: center;
+}
+.timer-controls { display: flex; gap: 6px; flex-wrap: wrap; }
+.timer-controls .btn { padding: 6px 10px; }
+
+/* Highlight the currently running timer block */
+.timer-row > div.is-active label {
+    color: var(--primary);
+    font-weight: 700;
+}
+.timer-row > div.is-active .time-display {
+    border: 2px solid var(--primary);
+    border-style: solid;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.20);
+}
+
+

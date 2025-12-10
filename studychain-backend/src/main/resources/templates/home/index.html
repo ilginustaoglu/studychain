@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>studychain</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/timers.css">
+    <link rel="stylesheet" href="/css/tasks.css">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="home-grid">
+    <section class="timers">
+        <h2>Timers</h2>
+        <div class="timer-row">
+            <div>
+                <label>Study</label>
+                <div id="studyDisplay" class="time-display">00:00:00</div>
+            </div>
+            <div>
+                <label>Break</label>
+                <div id="breakDisplay" class="time-display">00:00:00</div>
+            </div>
+        </div>
+        <div class="timer-controls">
+            <button id="modeToggle" class="btn">Study</button>
+            <button id="playPause" class="btn btn-primary">Play</button>
+            <button id="resetTimers" class="btn btn-danger">Reset</button>
+        </div>
+    </section>
+    <section class="tasks">
+        <h2>Tasks</h2>
+        <form id="taskForm" class="task-form">
+            <input id="taskTitle" type="text" placeholder="New task..." required maxlength="255">
+            <button class="btn btn-primary" type="submit">Add</button>
+        </form>
+        <ul id="taskList" class="task-list"></ul>
+    </section>
+    <section class="music" th:if="${username} != null">
+        <div class="music-header">
+            <span>Music</span>
+        </div>
+        <div th:if="${param.error}" style="margin:8px 0; color: var(--danger, #b00020); font-size: 0.9rem;"
+             th:text="${param.error[0] == 'maxUpload' ? 'Upload failed: file too large (limit 100MB).' : (param.error[0] == 'forbidden' ? 'Only admin users can upload.' : 'An error occurred.')}">
+            Error
+        </div>
+        <div class="music-tabs" style="display:flex; gap:8px; margin-bottom:8px;">
+            <button type="button" class="music-tab btn btn-ghost active" data-tab="MUSIC">Music</button>
+            <button type="button" class="music-tab btn btn-ghost" data-tab="NATURAL">Natural Sounds</button>
+        </div>
+        <audio id="musicPlayer" controls preload="none" style="width: 100%;"></audio>
+        <ul class="music-list">
+            <li th:if="${#lists.isEmpty(musicList)}" class="muted">No tracks yet</li>
+            <li th:each="m : ${musicList}">
+                <button class="music-item btn btn-ghost"
+                        type="button"
+                        th:data-src="@{'/music/' + ${m.id} + '/stream'}"
+                        th:data-category="${m.category}"
+                        th:text="${m.title}">Track</button>
+            </li>
+        </ul>
+        <form th:if="${isAdmin}" class="music-upload-form" method="post" action="/music/upload" enctype="multipart/form-data">
+            <input type="text" name="title" placeholder="Title (optional)" maxlength="255" style="width: 100%; margin-bottom: 8px;">
+            <select name="category" style="width:100%; margin-bottom: 8px;">
+                <option value="MUSIC">Music</option>
+                <option value="NATURAL">Natural</option>
+            </select>
+            <input type="file" name="file" accept="audio/mpeg,.mp3" required style="width: 100%; margin-bottom: 8px;">
+            <button class="btn btn-primary" type="submit" style="width: 100%;">Upload MP3</button>
+        </form>
+        <div style="display:flex; gap:8px; margin-top:8px;">
+            <button class="btn btn-ghost" type="button" disabled title="Coming soon">Connect Spotify</button>
+            <button class="btn btn-ghost" type="button" disabled title="Coming soon">Connect YouTube Music</button>
+        </div>
+    </section>
+    <a href="/requests" id="requestsFab" class="fab fab-secondary" title="Requests" aria-label="Requests">📝</a>
+    <button id="toolsFab" class="fab">🎒</button>
+    <div id="toolsPanel" class="tools-panel hidden">
+        <a class="tool-link" href="/games">Games</a>
+        <a class="tool-link" href="#" aria-disabled="true">Agenda</a>
+		<a class="tool-link" href="/flashcards">Flashcard</a>
+        <a class="tool-link" href="#" aria-disabled="true">Study Files</a>
+    </div>
+</main>
+<script>
+    window.SC_USERNAME = /*[[${username}]]*/ '';
+</script>
+<script src="/js/timers.js"></script>
+<script src="/js/tasks.js"></script>
+<script src="/js/tools.js"></script>
+<script src="/js/music.js"></script>
+</body>
+</html>
+
+

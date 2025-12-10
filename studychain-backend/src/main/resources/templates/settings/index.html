@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Settings • studychain</title>
+	<link rel="stylesheet" href="/css/base.css">
+	<link rel="stylesheet" href="/css/navbar.css">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="container" style="max-width: 960px; margin: 24px auto; padding: 0 12px;">
+	<h1 style="margin-bottom: 16px;">Settings</h1>
+	<p style="margin-bottom: 24px; opacity: 0.8;">Manage your profile photo, application preferences, and account.</p>
+
+	<div role="tablist" aria-label="Settings sections" style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
+		<button class="btn btn-primary" data-target="application" aria-selected="true" type="button">Application</button>
+		<button class="btn btn-ghost" data-target="account" aria-selected="false" type="button">Account</button>
+	</div>
+
+	<div th:if="${success != null}" class="muted" style="margin-bottom: 12px; color: #22c55e;" th:text="${success}"></div>
+	<div th:if="${error != null}" class="error" style="margin-bottom: 12px;" th:text="${error}"></div>
+
+	<section data-section="application" style="margin-bottom: 32px;">
+		<h2 style="margin-bottom: 12px;">Application</h2>
+		<!-- Intentionally left blank for now -->
+	</section>
+
+	<section data-section="account" class="hidden">
+		<h2 style="margin-bottom: 12px;">Account</h2>
+		<div style="display:grid; gap: 24px;">
+			<section>
+				<h3 style="margin-bottom: 8px;">Profile photo</h3>
+				<div style="display:flex; align-items:center; gap:16px;">
+					<img src="/profile/photo" alt="Profile photo" width="64" height="64" style="border-radius: 50%; border: 1px solid var(--border);" onerror="this.style.display='none'">
+					<form method="post" action="/profile/photo" enctype="multipart/form-data">
+						<input type="file" name="photo" accept="image/*">
+						<button class="btn btn-primary" type="submit">Upload</button>
+					</form>
+				</div>
+				<p class="muted" style="margin-top:8px;">Max 5MB. JPG, PNG, or GIF.</p>
+			</section>
+
+			<section>
+				<h3 style="margin-bottom: 8px;">Cover photo</h3>
+				<div style="display:flex; align-items:center; gap:16px;">
+					<div style="width: 240px; height: 80px; border-radius: 8px; border: 1px solid var(--border); overflow: hidden; background: var(--surface); display:flex; align-items:center; justify-content:center;">
+						<img src="/profile/cover" alt="Cover photo" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'">
+					</div>
+					<form method="post" action="/profile/cover" enctype="multipart/form-data">
+						<input type="file" name="cover" accept="image/*">
+						<button class="btn btn-primary" type="submit">Upload</button>
+					</form>
+				</div>
+				<p class="muted" style="margin-top:8px;">Max 8MB. JPG, PNG, or GIF.</p>
+			</section>
+
+			<form method="post" action="/settings/account/profile" class="form" style="max-width: 420px;">
+				<div class="form-group">
+					<label for="username">Username</label>
+					<input id="username" name="username" type="text" th:value="${user != null ? user.username : ''}" required maxlength="50">
+				</div>
+				<div class="form-group">
+					<label for="firstName">First name</label>
+					<input id="firstName" name="firstName" type="text" th:value="${user != null ? user.firstName : ''}" required maxlength="80">
+				</div>
+				<div class="form-group">
+					<label for="lastName">Last name</label>
+					<input id="lastName" name="lastName" type="text" th:value="${user != null ? user.lastName : ''}" required maxlength="80">
+				</div>
+				<button class="btn btn-primary" type="submit">Update Profile</button>
+			</form>
+
+			<form method="post" action="/settings/account/visibility" class="form" style="max-width: 420px;">
+				<div class="form-group">
+					<label>
+						<input type="checkbox" name="showFullName" th:checked="${displayNameMode == 'full_name'}">
+						Show full name (instead of username)
+					</label>
+				</div>
+				<div class="form-group">
+					<label>
+						<input type="checkbox" name="showBirthDate" th:checked="${showBirthDatePublic}">
+						Show birth date on profile
+					</label>
+				</div>
+				<div class="form-group">
+					<label>
+						<input type="checkbox" name="showJoinedDate" th:checked="${showJoinedDatePublic}">
+						Show joined date on profile
+					</label>
+				</div>
+				<button class="btn btn-primary" type="submit">Save Visibility</button>
+			</form>
+
+			<form method="post" action="/settings/account/email" class="form" style="max-width: 420px;">
+				<div class="form-group">
+					<label for="email">Email</label>
+					<input id="email" name="email" type="email" th:value="${user != null ? user.email : ''}" required maxlength="255">
+				</div>
+				<button class="btn btn-primary" type="submit">Update Email</button>
+			</form>
+
+			<form method="post" action="/settings/account/password" class="form" style="max-width: 420px;">
+				<div class="form-group">
+					<label for="currentPassword">Current password</label>
+					<input id="currentPassword" name="currentPassword" type="password" required minlength="4">
+				</div>
+				<div class="form-group">
+					<label for="newPassword">New password</label>
+					<input id="newPassword" name="newPassword" type="password" required minlength="4">
+				</div>
+				<div class="form-group">
+					<label for="confirmPassword">Confirm new password</label>
+					<input id="confirmPassword" name="confirmPassword" type="password" required minlength="4">
+				</div>
+				<button class="btn btn-primary" type="submit">Update Password</button>
+			</form>
+
+			<form method="post" action="/settings/account/about" class="form" style="max-width: 720px;">
+				<div class="form-group">
+					<label for="about">About</label>
+					<textarea id="about" name="about" rows="4" maxlength="2000" placeholder="Tell something about yourself..." th:text="${about}"></textarea>
+				</div>
+				<button class="btn btn-primary" type="submit">Save About</button>
+			</form>
+		</div>
+	</section>
+</main>
+
+<script>
+	/* Pass selected tab from server (if any) to JS */
+	window.SC_SETTINGS_TAB = /*[[${tab}]]*/ '';
+</script>
+<script src="/js/settings.js"></script>
+</body>
+</html>
+
+

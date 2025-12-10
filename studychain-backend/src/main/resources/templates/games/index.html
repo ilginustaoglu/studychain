@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games - studychain</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <style>
+        .games-page { display: grid; justify-items: center; padding: 16px; }
+        .game-tabs { display: flex; gap: 8px; margin: 16px 0; justify-content: center; }
+        .game-panel { display: none; }
+        .game-panel.active { display: block; }
+        /* Sudoku styles */
+        .sudoku-wrapper { display: grid; gap: 12px; justify-items: center; }
+        .sudoku-grid {
+            display: grid;
+            grid-template-columns: repeat(9, 36px);
+            grid-template-rows: repeat(9, 36px);
+            gap: 0;
+            border: 2px solid var(--text);
+            width: max-content;
+            background: var(--surface);
+        }
+        .sudoku-cell {
+            width: 36px;
+            height: 36px;
+            text-align: center;
+            font-size: 16px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+        }
+        .sudoku-cell.readonly { background: rgba(99,102,241,0.15); }
+        .sudoku-controls { display: flex; gap: 8px; flex-wrap: wrap; }
+        /* thick borders between 3x3 blocks */
+        .sudoku-grid .cell-r3, .sudoku-grid .cell-r6 { border-bottom: 2px solid var(--text); }
+        .sudoku-grid .cell-c3, .sudoku-grid .cell-c6 { border-right: 2px solid var(--text); }
+        .sudoku-diff.active { background: var(--primary); border-color: var(--primary); color: #ffffff; }
+        /* Dino styles */
+        .dino-wrapper { display: grid; gap: 12px; justify-items: center; }
+        .dino-canvas-wrap {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface);
+            width: max-content;
+            padding: 8px;
+        }
+        /* Tetris styles */
+        .tetris-wrapper { display: grid; gap: 12px; justify-items: center; }
+        .tetris-canvas-wrap {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface);
+            width: max-content;
+            padding: 8px;
+        }
+        /* DXBall styles */
+        .dxball-wrapper { display: grid; gap: 12px; justify-items: center; }
+        .dxball-canvas-wrap {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface);
+            width: max-content;
+            padding: 8px;
+        }
+        .muted-small { color: var(--muted); font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="games-page">
+    <h2 style="margin: 16px 0;">Games</h2>
+
+    <div class="game-tabs">
+        <button class="btn btn-ghost game-tab active" data-tab="sudoku">Sudoku</button>
+        <button class="btn btn-ghost game-tab" data-tab="dino">Dino</button>
+        <button class="btn btn-ghost game-tab" data-tab="tetris">Tetris</button>
+        <button class="btn btn-ghost game-tab" data-tab="dxball">DXBall</button>
+    </div>
+
+    <section id="sudokuPanel" class="game-panel active">
+        <div class="sudoku-wrapper">
+            <div id="sudokuGrid" class="sudoku-grid" aria-label="Sudoku grid"></div>
+            <div class="sudoku-controls">
+                <button id="sudokuNew" class="btn btn-primary">New Puzzle</button>
+                <button id="sudokuSolve" class="btn">Solve</button>
+                <button id="sudokuCheck" class="btn">Check</button>
+                <button id="sudokuClear" class="btn btn-danger">Clear</button>
+                <span id="sudokuStatus" class="muted-small" aria-live="polite"></span>
+                <span class="muted-small" style="margin-left:12px;">Difficulty:</span>
+                <div style="display:flex; gap:6px;">
+                    <button class="btn btn-ghost sudoku-diff" data-clues="44">Easy</button>
+                    <button class="btn btn-ghost sudoku-diff active" data-clues="38">Medium</button>
+                    <button class="btn btn-ghost sudoku-diff" data-clues="30">Hard</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="tetrisPanel" class="game-panel">
+        <div class="tetris-wrapper">
+            <div class="tetris-canvas-wrap">
+                <canvas id="tetrisCanvas" width="240" height="480" aria-label="Tetris board"></canvas>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding: 0 16px 16px;">
+                <button id="tetrisStart" class="btn btn-primary">Start</button>
+                <button id="tetrisRestart" class="btn">Restart</button>
+                <span class="muted-small">Move: ← →, Rotate: ↑, Drop: ↓ / Space</span>
+                <span id="tetrisScore" class="muted-small">Score: 0</span>
+                <span id="tetrisLines" class="muted-small">Lines: 0</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="dxballPanel" class="game-panel">
+        <div class="dxball-wrapper">
+            <div class="dxball-canvas-wrap">
+                <canvas id="dxballCanvas" width="640" height="520" aria-label="DXBall board"></canvas>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding: 0 16px 16px;">
+                <button id="dxballRestart" class="btn">Restart</button>
+                <span class="muted-small">Move: ← → / Mouse, Launch: Space</span>
+                <span id="dxballScore" class="muted-small">Score: 0</span>
+                <span id="dxballLives" class="muted-small">Lives: 3</span>
+                <span id="dxballLevel" class="muted-small">Level: 1</span>
+                <span id="dxballCoins" class="muted-small">Coins: 0</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="dinoPanel" class="game-panel">
+        <div class="dino-wrapper">
+            <div class="dino-canvas-wrap">
+                <canvas id="dinoCanvas" width="640" height="180"></canvas>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding: 0 16px 16px;">
+                <button id="dinoStart" class="btn btn-primary">Start</button>
+                <button id="dinoRestart" class="btn">Restart</button>
+                <span class="muted-small">Jump: Space / ↑</span>
+                <span id="dinoScore" class="muted-small">Score: 0</span>
+            </div>
+        </div>
+    </section>
+</main>
+<script>
+    // Simple tab handling
+    (function() {
+        const tabs = document.querySelectorAll('.game-tab');
+        const panels = {
+            sudoku: document.getElementById('sudokuPanel'),
+            dino: document.getElementById('dinoPanel'),
+            tetris: document.getElementById('tetrisPanel'),
+            dxball: document.getElementById('dxballPanel')
+        };
+        tabs.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabs.forEach(b => b.classList.remove('active'));
+                Object.values(panels).forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                const key = btn.getAttribute('data-tab');
+                if (panels[key]) panels[key].classList.add('active');
+            });
+        });
+    })();
+</script>
+<script src="/js/games/sudoku.js"></script>
+<script src="/js/games/dino.js"></script>
+<script src="/js/games/tetris.js"></script>
+<script src="/js/games/dxball.js"></script>
+</body>
+</html>
+
+

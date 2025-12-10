@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>studychain</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="container">
+    <h1>Sign up</h1>
+    <form method="post" action="/auth/signup" th:object="${form}" class="form">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" th:field="*{username}" required minlength="3" maxlength="50">
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" th:field="*{email}" required maxlength="255">
+        </div>
+        <div class="form-group">
+            <label for="firstName">First name</label>
+            <input type="text" id="firstName" th:field="*{firstName}" required maxlength="80">
+        </div>
+        <div class="form-group">
+            <label for="lastName">Last name</label>
+            <input type="text" id="lastName" th:field="*{lastName}" required maxlength="80">
+        </div>
+        <div class="form-group">
+            <label for="birthDate">Birth date</label>
+            <input type="date" id="birthDate" th:field="*{birthDate}">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" th:field="*{password}" required minlength="6">
+        </div>
+        <div class="form-group">
+            <label for="confirmPassword">Confirm password</label>
+            <input type="password" id="confirmPassword" th:field="*{confirmPassword}" required minlength="6">
+        </div>
+        <button class="btn btn-primary" type="submit">Create account</button>
+        <p class="muted">Already have an account? <a href="/auth/login">Sign in</a></p>
+        <p class="error" th:if="${error}" th:text="${error}"></p>
+    </form>
+    <script src="/js/navbar.js"></script>
+</main>
+</body>
+</html>
+
+

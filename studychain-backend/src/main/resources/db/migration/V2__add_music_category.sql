@@ -1,0 +1,5 @@
+ALTER TABLE music ADD COLUMN IF NOT EXISTS category VARCHAR(20);
+UPDATE music SET category = 'MUSIC' WHERE category IS NULL;
+ALTER TABLE music ALTER COLUMN category SET NOT NULL;
+
+

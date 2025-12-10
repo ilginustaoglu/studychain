@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Profile - studychain</title>
+	<link rel="stylesheet" href="/css/base.css">
+	<link rel="stylesheet" href="/css/navbar.css">
+	<link rel="stylesheet" href="/css/profile.css">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="profile-page">
+	<div class="profile-cover">
+		<img th:if="${hasCover}" th:src="@{/profile/cover}" alt="Cover photo">
+	</div>
+
+	<div class="profile-header container">
+		<div class="profile-avatar">
+			<img th:if="${hasPhoto}" th:src="@{/profile/photo}" alt="Profile photo">
+			<div th:if="${!hasPhoto}" class="placeholder">No photo</div>
+		</div>
+		<div class="profile-name" th:text="${displayName}">John Doe</div>
+		<div class="profile-meta">
+			<table style="border-collapse: collapse;">
+				<tr th:if="${showBirth}">
+					<td class="muted" style="padding: 4px 0; width: 140px;">Birth date</td>
+					<td style="padding: 4px 0;" th:text="${birthDateFormatted}">1 January 1990</td>
+				</tr>
+				<tr th:if="${showJoined}">
+					<td class="muted" style="padding: 4px 0;">Joined</td>
+					<td style="padding: 4px 0;" th:text="${joinedFormatted}">1 January 2024</td>
+				</tr>
+			</table>
+			<section class="profile-about" th:if="${about != null and !#strings.isEmpty(about)}">
+				<h3 style="margin: 12px 0 6px;">About</h3>
+				<div th:text="${about}">About text...</div>
+			</section>
+		</div>
+	</div>
+
+	<div class="container" style="margin-top: 24px;">
+		<div class="profile-main-grid">
+			<section>
+				<h3 style="margin: 0 0 8px;">Daily notes</h3>
+				<form method="post" action="/profile/notes" class="form" style="margin-bottom: 12px;">
+					<div class="form-group">
+						<textarea name="content" rows="2" maxlength="280" placeholder="Leave a short note for today..."></textarea>
+					</div>
+					<button class="btn btn-primary" type="submit">Add note</button>
+				</form>
+				<ul style="list-style:none; padding:0; margin:0; display:grid; gap:8px;">
+					<li th:each="n : ${notes}" style="border:1px solid var(--border); border-radius:8px; padding:8px;">
+						<div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+							<div class="muted" th:text="${#temporals.format(n.createdAt, 'd MMM yyyy HH:mm')}">1 Jan 2024 12:00</div>
+							<form method="post" th:action="@{'/profile/notes/' + ${n.id} + '/delete'}">
+								<button class="btn btn-danger" type="submit" style="padding:4px 8px;">Delete</button>
+							</form>
+						</div>
+						<div th:text="${n.content}" style="margin-top:6px;">Note content</div>
+					</li>
+				</ul>
+			</section>
+
+			<aside>
+				<h3 style="margin: 0 0 8px;">Study stats</h3>
+				<table style="width:100%; border-collapse: collapse; margin-top: 0;">
+					<thead>
+						<tr>
+							<th style="text-align:left; padding:6px; border-bottom:1px solid var(--border);">Day</th>
+							<th style="text-align:right; padding:6px; border-bottom:1px solid var(--border);">Minutes</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="e : ${studyStatsWeekDays}">
+							<td style="padding:6px; border-bottom:1px solid var(--border);" th:text="${e.key}">Monday</td>
+							<td style="padding:6px; text-align:right; border-bottom:1px solid var(--border);" th:text="${e.value}">0</td>
+						</tr>
+					</tbody>
+				</table>
+			</aside>
+		</div>
+	</div>
+</main>
+<script>
+	window.SC_STUDY_STATS_WEEK = /*[[${studyStatsWeek}]]*/ {};
+</script>
+<script src="/js/profile.js"></script>
+</body>
+</html>
+
+

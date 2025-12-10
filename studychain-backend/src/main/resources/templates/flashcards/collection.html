@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title th:text="${collection.name + ' • Flashcards'}">Collection • Flashcards</title>
+	<link rel="stylesheet" href="/css/base.css">
+	<link rel="stylesheet" href="/css/navbar.css">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="container" style="max-width: 920px; margin: 16px auto; padding: 0 12px;">
+	<a class="btn" href="/flashcards">← Collections</a>
+	<div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+		<h1 th:text="${collection.name}" style="margin: 0;">Collection</h1>
+		<a class="btn btn-primary" th:href="@{|/flashcards/collections/${collection.id}/study|}">Study</a>
+	</div>
+	<div class="muted" th:if="${collection.description}" th:text="${collection.description}">desc</div>
+
+	<div th:if="${param.error}" class="muted" style="color: var(--danger, #b00020); margin: 8px 0;">
+		<span th:text="${param.error[0] == 'invalid' ? 'Please provide both Front and Back.' : 'An error occurred.'}">Error</span>
+	</div>
+
+	<section style="margin: 16px 0;">
+		<h2 style="margin-bottom: 8px;">Add Card</h2>
+		<form th:action="@{|/flashcards/collections/${collection.id}/cards|}" method="post" style="display: grid; gap: 8px;">
+			<textarea name="frontText" placeholder="Front" rows="3" maxlength="2000" required style="resize: vertical;"></textarea>
+			<textarea name="backText" placeholder="Back" rows="3" maxlength="2000" required style="resize: vertical;"></textarea>
+			<button class="btn btn-primary" type="submit" style="justify-self: start;">Add Card</button>
+		</form>
+	</section>
+
+	<section style="margin: 24px 0;">
+		<h2 style="margin-bottom: 8px;">Cards</h2>
+		<ul style="list-style: none; padding: 0; display: grid; gap: 8px;">
+			<li th:if="${#lists.isEmpty(cards)}" class="muted">No cards yet</li>
+			<li th:each="card : ${cards}" style="border: 1px solid var(--border,#e0e0e0); border-radius: 8px; padding: 12px; display:grid; gap: 8px;">
+				<div>
+					<div class="muted" style="font-size: 0.85rem; margin-bottom: 4px;">Front</div>
+					<div th:text="${card.frontText}">front</div>
+				</div>
+				<div>
+					<div class="muted" style="font-size: 0.85rem; margin-bottom: 4px;">Back</div>
+					<div th:text="${card.backText}">back</div>
+				</div>
+			</li>
+		</ul>
+	</section>
+</main>
+<script src="/js/theme.js"></script>
+</body>
+</html>
+
+

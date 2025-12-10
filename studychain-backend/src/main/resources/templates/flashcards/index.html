@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Flashcards • studychain</title>
+	<link rel="stylesheet" href="/css/base.css">
+	<link rel="stylesheet" href="/css/navbar.css">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="container" style="max-width: 920px; margin: 16px auto; padding: 0 12px;">
+	<h1>Flashcards</h1>
+
+	<div th:if="${param.error}" class="muted" style="color: var(--danger, #b00020); margin: 8px 0;">
+		<span th:text="${param.error[0] == 'invalid' ? 'Please provide a valid name.' : 'An error occurred.'}">Error</span>
+	</div>
+
+	<section style="margin: 16px 0;">
+		<h2 style="margin-bottom: 8px;">New Collection</h2>
+		<form method="post" action="/flashcards/collections" style="display: grid; gap: 8px;">
+			<input type="text" name="name" placeholder="Collection name" maxlength="200" required>
+			<textarea name="description" placeholder="Description (optional)" rows="2" maxlength="1000" style="resize: vertical;"></textarea>
+			<button class="btn btn-primary" type="submit" style="justify-self: start;">Create</button>
+		</form>
+	</section>
+
+	<section style="margin: 24px 0;">
+		<h2 style="margin-bottom: 8px;">Your Collections</h2>
+		<ul style="list-style: none; padding: 0; display: grid; gap: 8px;">
+			<li th:if="${#lists.isEmpty(collections)}" class="muted">No collections yet</li>
+			<li th:each="c : ${collections}" style="border: 1px solid var(--border,#e0e0e0); border-radius: 8px; padding: 12px; display:flex; justify-content: space-between; align-items: center;">
+				<div>
+					<a th:href="@{|/flashcards/collections/${c.id}|}" th:text="${c.name}" class="btn btn-ghost" style="padding: 0; font-weight: 600;">Collection</a>
+					<div class="muted" th:text="${c.description}" th:if="${c.description}">desc</div>
+				</div>
+				<a class="btn" th:href="@{|/flashcards/collections/${c.id}|}">Open</a>
+			</li>
+		</ul>
+	</section>
+
+	<a class="btn" href="/home">← Back to Home</a>
+</main>
+<script src="/js/theme.js"></script>
+</body>
+</html>
+
+

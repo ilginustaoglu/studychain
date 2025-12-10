@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Requests & Updates - studychain</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <style>
+        .container { max-width: 900px; margin: 0 auto; padding: 16px; }
+        .grid { display: grid; gap: 16px; }
+        .card { border: 1px solid var(--border); border-radius: 8px; background: var(--surface); padding: 16px; }
+        .updates-list, .requests-list { display: grid; gap: 12px; }
+        .update-item h4 { margin: 0 0 6px 0; }
+        .muted { color: var(--muted); }
+        .row { display: flex; align-items: center; gap: 8px; }
+        .row-wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+        textarea { width: 100%; min-height: 120px; }
+        .badge { font-size: 0.75rem; padding: 2px 6px; border: 1px solid var(--border); border-radius: 6px; color: var(--muted); }
+    </style>
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="container grid">
+    <h2>Requests & Updates</h2>
+
+    <div th:if="${param.ok}" class="muted">Saved successfully.</div>
+    <div th:if="${param.error}" class="muted" style="color: var(--danger);">An error occurred.</div>
+
+    <section class="card">
+        <h3>Updates</h3>
+        <div class="updates-list">
+            <div class="muted" th:if="${#lists.isEmpty(updates)}">No updates yet.</div>
+            <div class="update-item" th:each="u : ${updates}">
+                <div class="row-wrap" style="justify-content: space-between;">
+                    <h4 th:text="${u.title}">Update title</h4>
+                    <span class="badge" th:text="${#temporals.format(u.createdAt, 'yyyy-MM-dd HH:mm')}">2025-01-01</span>
+                </div>
+                <p th:text="${u.content}">Update content...</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="card">
+        <h3>Send a Request</h3>
+        <div th:if="${username} == null" class="muted">You must be logged in to send a request.</div>
+        <form th:if="${username} != null" method="post" action="/requests" class="grid" style="gap: 8px;">
+            <textarea name="content" placeholder="Write your feedback or complaint..." required maxlength="4000"></textarea>
+            <div>
+                <button class="btn btn-primary" type="submit">Send</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="card">
+        <div class="row-wrap" style="justify-content: space-between;">
+            <h3 th:text="${isAdmin} ? 'All Requests' : 'My Requests'">Requests</h3>
+            <span class="muted" th:if="${#lists.isEmpty(requests)}">No requests yet.</span>
+        </div>
+        <div class="requests-list">
+            <div class="card" th:each="r : ${requests}" style="padding: 12px;">
+                <div class="row-wrap" style="justify-content: space-between; margin-bottom: 6px;">
+                    <span class="badge" th:text="${#temporals.format(r.createdAt, 'yyyy-MM-dd HH:mm')}">2025-01-01</span>
+                    <span th:if="${isAdmin}" class="muted" th:text="'by ' + r.user.username + ' (' + r.user.email + ')'">by admin</span>
+                </div>
+                <div th:text="${r.content}">Request text...</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="card" th:if="${isAdmin}">
+        <h3>Post Update (Admin)</h3>
+        <form method="post" action="/requests/updates" class="grid" style="gap: 8px;">
+            <input type="text" name="title" placeholder="Update title" required maxlength="255"/>
+            <textarea name="content" placeholder="Update content" required maxlength="8000"></textarea>
+            <div>
+                <button class="btn btn-primary" type="submit">Publish</button>
+            </div>
+        </form>
+    </section>
+</main>
+</body>
+</html>
+
+
