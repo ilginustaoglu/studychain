@@ -1,0 +1,35 @@
+# Build output
+target/
+build/
+out/
+
+# Java
+*.class
+*.log
+*.jar
+*.war
+*.ear
+hs_err_pid*
+
+# Node
+node_modules/
+
+# IDE/editor
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env/secrets
+.env
+
+# Misc
+logs/
+.classpath
+.project
+.settings/
+
+
