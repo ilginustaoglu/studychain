@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>New Note</title>
+	<link rel="stylesheet" href="/css/base.css">
+	<link rel="stylesheet" href="/css/navbar.css">
+	<style>
+		/* page-scoped tweaks only */
+		.form-field { width: 100%; margin-bottom: 8px; }
+	</style>
+	</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="container" style="max-width: 900px; margin: 16px auto; padding: 0 12px;">
+	<h1 style="margin-bottom: 12px;">New Note</h1>
+	<form method="post" action="/study-files/notes" style="display:flex; flex-direction: column; gap:8px;">
+		<input class="form-field" type="text" name="title" placeholder="Title (optional)" maxlength="255">
+		<textarea class="form-field" name="content" rows="14" placeholder="Write your note..." required></textarea>
+		<div style="display:flex; gap:8px;">
+			<a class="btn btn-ghost" href="/study-files">Cancel</a>
+			<button class="btn btn-primary" type="submit">Save</button>
+		</div>
+	</form>
+</main>
+<script src="/js/navbar.js"></script>
+</body>
+</html>
+
+

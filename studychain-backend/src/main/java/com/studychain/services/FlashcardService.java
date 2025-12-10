@@ -73,6 +73,19 @@ public class FlashcardService {
 			return flashcardRepository.save(card);
 		});
 	}
+
+	@Transactional
+	public boolean deleteCollection(Long userId, Long collectionId) {
+		Optional<User> u = userRepository.findById(userId);
+		if (u.isEmpty()) return false;
+		User user = u.get();
+		boolean isAdmin = user.getRole() == com.studychain.models.UserRole.ADMIN;
+		Optional<FlashcardCollection> col = isAdmin ? collectionRepository.findById(collectionId)
+			: collectionRepository.findByIdAndUser(collectionId, user);
+		if (col.isEmpty()) return false;
+		collectionRepository.delete(col.get());
+		return true;
+	}
 }
 
 

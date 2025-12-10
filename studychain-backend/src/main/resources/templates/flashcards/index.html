@@ -34,7 +34,12 @@
 					<a th:href="@{|/flashcards/collections/${c.id}|}" th:text="${c.name}" class="btn btn-ghost" style="padding: 0; font-weight: 600;">Collection</a>
 					<div class="muted" th:text="${c.description}" th:if="${c.description}">desc</div>
 				</div>
-				<a class="btn" th:href="@{|/flashcards/collections/${c.id}|}">Open</a>
+				<div style="display:flex; gap:8px; align-items:center;">
+					<a class="btn" th:href="@{|/flashcards/collections/${c.id}|}">Open</a>
+					<form th:action="@{|/flashcards/collections/${c.id}/delete|}" method="post" onsubmit="return confirm('Are you sure you want to delete this collection? This cannot be undone.');">
+						<button class="btn btn-danger" type="submit">Delete</button>
+					</form>
+				</div>
 			</li>
 		</ul>
 	</section>

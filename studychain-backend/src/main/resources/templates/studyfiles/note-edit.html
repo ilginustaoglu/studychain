@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title th:text="'Edit • ' + ${note.title}">Edit note</title>
+	<link rel="stylesheet" href="/css/base.css">
+	<link rel="stylesheet" href="/css/navbar.css">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="container" style="max-width: 900px; margin: 16px auto; padding: 0 12px;">
+	<h1 style="margin-bottom: 12px;">Edit note</h1>
+
+	<div th:if="${param.error}" class="muted" style="margin-bottom: 8px; color: var(--danger, #b00020);">
+		<span th:text="${param.error}">Error</span>
+	</div>
+
+	<form th:action="@{'/study-files/notes/' + ${note.id} + '/edit'}" method="post" style="display:flex; flex-direction: column; gap:8px;">
+		<input type="text" name="title" placeholder="Title (optional)" maxlength="255" th:value="${note.title}">
+		<textarea name="content" rows="14" placeholder="Write your note..." required th:text="${note.content}"></textarea>
+		<div style="display:flex; gap:8px;">
+			<a class="btn btn-ghost" th:href="@{'/study-files/notes/' + ${note.id}}">Cancel</a>
+			<button class="btn btn-primary" type="submit">Save</button>
+		</div>
+	</form>
+</main>
+<script src="/js/navbar.js"></script>
+</body>
+</html>
+
+

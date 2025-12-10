@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Study Files</title>
+	<link rel="stylesheet" href="/css/base.css">
+	<link rel="stylesheet" href="/css/navbar.css">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="container" style="max-width: 1200px; margin: 16px auto; padding: 0 12px; position: relative;">
+	<h1 style="margin-bottom: 12px;">Study Files
+		<button id="sfPlus" class="btn btn-primary" type="button" style="float:right;">＋</button>
+	</h1>
+
+	<div th:if="${param.error}" class="muted" style="margin-bottom: 12px; color: var(--danger, #b00020);">
+		<span th:text="${param.error}">Error</span>
+	</div>
+
+	<div style="display:flex; gap:32px; align-items:flex-start; flex-wrap: wrap; justify-content: space-between;">
+		<section style="flex:1; min-width: 300px; margin-bottom: 20px;">
+			<h2 style="margin-bottom: 8px;">Dosyalar</h2>
+			<div th:if="${#lists.isEmpty(files)}" class="muted">Henüz dosya yok</div>
+			<table th:if="${!#lists.isEmpty(files)}" style="width:100%; border-collapse: collapse;">
+				<thead>
+				<tr>
+					<th style="text-align:left; border-bottom:1px solid var(--border-color,#ddd); padding:14px;">Ad</th>
+					<th style="text-align:left; border-bottom:1px solid var(--border-color,#ddd); padding:14px;">Tür</th>
+					<th style="text-align:left; border-bottom:1px solid var(--border-color,#ddd); padding:14px;">Oluşturulma</th>
+					<th style="text-align:right; border-bottom:1px solid var(--border-color,#ddd); padding:14px;">İşlem</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr th:each="f : ${files}">
+					<td style="padding:14px;" th:text="${f.originalName}">name</td>
+					<td style="padding:14px;" th:text="${f.contentType}">type</td>
+					<td style="padding:14px;" th:text="${#dates.format(f.createdAt, 'yyyy-MM-dd HH:mm')}">date</td>
+					<td style="padding:14px; text-align:right;">
+						<span style="display:inline-flex; gap:6px; align-items:center;">
+							<a class="btn btn-primary" th:href="@{'/study-files/files/' + ${f.id}}" style="padding:4px 10px; font-size:0.9rem;">Open</a>
+							<form th:action="@{'/study-files/files/' + ${f.id} + '/delete'}" method="post" style="display:inline;">
+								<button class="btn btn-danger" type="submit" style="padding:4px 10px; font-size:0.9rem;" onclick="return confirm('Delete this file?');">Delete</button>
+							</form>
+						</span>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</section>
+
+		<section style="flex:1; min-width: 300px;">
+			<h2 style="margin-bottom: 8px;">Notlar</h2>
+			<div th:if="${#lists.isEmpty(notes)}" class="muted">Henüz not yok</div>
+			<table th:if="${!#lists.isEmpty(notes)}" style="width:100%; border-collapse: collapse;">
+				<thead>
+				<tr>
+					<th style="text-align:left; border-bottom:1px solid var(--border-color,#ddd); padding:14px;">Başlık</th>
+					<th style="text-align:left; border-bottom:1px solid var(--border-color,#ddd); padding:14px;">Güncellendi</th>
+					<th style="text-align:right; border-bottom:1px solid var(--border-color,#ddd); padding:14px;">İşlem</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr th:each="n : ${notes}">
+					<td style="padding:14px;" th:text="${n.title}">Note</td>
+					<td style="padding:14px;" th:text="${#dates.format(n.updatedAt, 'yyyy-MM-dd HH:mm')}">date</td>
+					<td style="padding:14px; text-align:right;">
+						<a class="btn btn-primary" th:href="@{'/study-files/notes/' + ${n.id}}" style="padding:4px 10px; font-size:0.9rem;">Open</a>
+						<form th:action="@{'/study-files/notes/' + ${n.id} + '/delete'}" method="post" style="display:inline;">
+							<button class="btn btn-danger" type="submit" style="padding:4px 10px; font-size:0.9rem; margin-left:6px;" onclick="return confirm('Delete this note?');">Delete</button>
+						</form>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</section>
+	</div>
+
+	<!-- Hidden forms and modal triggers -->
+	<form id="sfUploadPdfForm" method="post" action="/study-files/upload" enctype="multipart/form-data" style="display:none;">
+		<input id="sfPdfInput" type="file" name="file" accept=".pdf,application/pdf">
+	</form>
+	<form id="sfUploadImgForm" method="post" action="/study-files/upload" enctype="multipart/form-data" style="display:none;">
+		<input id="sfImgInput" type="file" name="file" accept="image/*">
+	</form>
+
+	<!-- Removed modal; we navigate to new note page instead -->
+
+	<!-- Plus menu -->
+	<div id="sfPlusMenu" class="card" style="display:none; position:absolute; right:12px; top:52px; padding:8px; border:1px solid var(--border-color,#ddd); border-radius:8px; background:var(--bg,#fff);">
+		<button type="button" class="btn btn-ghost" id="sfNewNoteBtn" style="display:block; width:100%; text-align:left;">📝 New note</button>
+		<button type="button" class="btn btn-ghost" id="sfNewPdfBtn" style="display:block; width:100%; text-align:left;">📄 New PDF</button>
+		<button type="button" class="btn btn-ghost" id="sfNewImgBtn" style="display:block; width:100%; text-align:left;">🖼️ New image</button>
+	</div>
+</main>
+<script src="/js/navbar.js"></script>
+<script>
+(() => {
+	const plus = document.getElementById('sfPlus');
+	const menu = document.getElementById('sfPlusMenu');
+	const newNoteBtn = document.getElementById('sfNewNoteBtn');
+	const newPdfBtn = document.getElementById('sfNewPdfBtn');
+	const newImgBtn = document.getElementById('sfNewImgBtn');
+	const pdfInput = document.getElementById('sfPdfInput');
+	const imgInput = document.getElementById('sfImgInput');
+
+	if (!plus) return;
+
+	function toggleMenu() {
+		menu.style.display = (menu.style.display === 'none' || menu.style.display === '') ? 'block' : 'none';
+	}
+
+	plus.addEventListener('click', (e) => {
+		e.stopPropagation();
+		toggleMenu();
+	});
+
+	document.addEventListener('click', (e) => {
+		if (menu.style.display === 'block' && !menu.contains(e.target) && e.target !== plus) {
+			menu.style.display = 'none';
+		}
+	});
+
+	newNoteBtn.addEventListener('click', () => {
+		menu.style.display = 'none';
+		window.location.href = '/study-files/notes/new';
+	});
+
+	newPdfBtn.addEventListener('click', () => {
+		menu.style.display = 'none';
+		pdfInput.click();
+	});
+	newImgBtn.addEventListener('click', () => {
+		menu.style.display = 'none';
+		imgInput.click();
+	});
+
+	pdfInput && pdfInput.addEventListener('change', () => {
+		if (pdfInput.files && pdfInput.files.length > 0) {
+			document.getElementById('sfUploadPdfForm').submit();
+		}
+	});
+	imgInput && imgInput.addEventListener('change', () => {
+		if (imgInput.files && imgInput.files.length > 0) {
+			document.getElementById('sfUploadImgForm').submit();
+		}
+	});
+})();
+</script>
+</body>
+</html>
+
+

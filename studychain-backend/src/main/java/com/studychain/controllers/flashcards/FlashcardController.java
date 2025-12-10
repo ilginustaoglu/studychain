@@ -88,6 +88,14 @@ public class FlashcardController {
 		return "redirect:/flashcards/collections/" + collectionId;
 	}
 
+	@PostMapping("/flashcards/collections/{id}/delete")
+	public String deleteCollection(@PathVariable("id") Long collectionId, HttpSession session) {
+		Long userId = (Long) session.getAttribute("userId");
+		if (userId == null) return "redirect:/auth/login";
+		boolean ok = flashcardService.deleteCollection(userId, collectionId);
+		return ok ? "redirect:/flashcards" : "redirect:/flashcards?error=notfound";
+	}
+
 	@GetMapping("/flashcards/collections/{id}/study")
 	public String study(@PathVariable("id") Long collectionId,
 	                    HttpSession session,

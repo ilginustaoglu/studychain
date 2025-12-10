@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title th:text="${note.title}">Note</title>
+	<link rel="stylesheet" href="/css/base.css">
+	<link rel="stylesheet" href="/css/navbar.css">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="container" style="max-width: 900px; margin: 16px auto; padding: 0 12px;">
+	<div style="display:flex; justify-content: space-between; align-items: baseline; gap: 8px;">
+		<h1 th:text="${note.title}">Note</h1>
+		<small class="muted" th:text="${#dates.format(note.updatedAt, 'yyyy-MM-dd HH:mm')}">updated</small>
+	</div>
+	<article style="white-space: pre-wrap; margin-top: 12px;" th:text="${note.content}">content</article>
+	<div style="margin-top: 16px;">
+		<a class="btn btn-ghost" href="/study-files">Back</a>
+		<a class="btn" th:href="@{'/study-files/notes/' + ${note.id} + '/edit'}" style="margin-left: 8px;">Edit</a>
+		<form th:action="@{'/study-files/notes/' + ${note.id} + '/delete'}" method="post" style="display:inline; margin-left: 8px;">
+			<button class="btn btn-danger" type="submit" onclick="return confirm('Delete this note?');">Delete</button>
+		</form>
+	</div>
+	</main>
+<script src="/js/navbar.js"></script>
+</body>
+</html>
+
+

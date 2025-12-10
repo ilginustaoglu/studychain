@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title th:text="${file.originalName}">File</title>
+	<link rel="stylesheet" href="/css/base.css">
+	<link rel="stylesheet" href="/css/navbar.css">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main class="container" style="max-width: 1100px; margin: 16px auto; padding: 0 12px;">
+	<div style="display:flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 8px;">
+		<h1 th:text="${file.originalName}">File</h1>
+		<small class="muted" th:text="${file.contentType}">type</small>
+	</div>
+	<div style="display:flex; gap:8px; margin-bottom: 12px;">
+		<a class="btn btn-primary" th:href="@{'/study-files/' + ${file.id} + '/view'}" target="_blank" rel="noopener">Open in new tab</a>
+		<a class="btn btn-ghost" href="/study-files">Back</a>
+		<form th:action="@{'/study-files/files/' + ${file.id} + '/delete'}" method="post" style="display:inline;">
+			<button class="btn btn-danger" type="submit" onclick="return confirm('Delete this file?');">Delete</button>
+		</form>
+	</div>
+	<div th:if="${#strings.startsWith(file.contentType, 'image/')}" style="width:100%; overflow:auto;">
+		<img th:src="@{'/study-files/' + ${file.id} + '/view'}" alt="" style="max-width:100%; height:auto; border:1px solid var(--border-color,#ddd); border-radius: 6px;">
+	</div>
+	<div th:if="${file.contentType == 'application/pdf'}" style="width:100%; height:80vh; border:1px solid var(--border-color,#ddd); border-radius: 6px; overflow:hidden;">
+		<iframe th:src="@{'/study-files/' + ${file.id} + '/view'}" title="PDF" style="width:100%; height:100%; border:0;"></iframe>
+	</div>
+	<div th:if="${!#strings.startsWith(file.contentType, 'image/') and file.contentType != 'application/pdf'}" class="muted">
+		Bu içerik tarayıcıda önizlenemiyor. “Open in new tab” ile açabilirsiniz.
+	</div>
+</main>
+<script src="/js/navbar.js"></script>
+</body>
+</html>
+
+
