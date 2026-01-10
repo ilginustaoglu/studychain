@@ -18,62 +18,51 @@
 		<span th:text="${param.error}">Error</span>
 	</div>
 
-	<div style="display:flex; gap:32px; align-items:flex-start; flex-wrap: wrap; justify-content: space-between;">
-		<section style="flex:1; min-width: 300px; margin-bottom: 20px;">
-			<h2 style="margin-bottom: 8px;">Dosyalar</h2>
-			<div th:if="${#lists.isEmpty(files)}" class="muted">Henüz dosya yok</div>
-			<table th:if="${!#lists.isEmpty(files)}" style="width:100%; border-collapse: collapse;">
-				<thead>
-				<tr>
-					<th style="text-align:left; border-bottom:1px solid var(--border-color,#ddd); padding:14px;">Ad</th>
-					<th style="text-align:left; border-bottom:1px solid var(--border-color,#ddd); padding:14px;">Tür</th>
-					<th style="text-align:left; border-bottom:1px solid var(--border-color,#ddd); padding:14px;">Oluşturulma</th>
-					<th style="text-align:right; border-bottom:1px solid var(--border-color,#ddd); padding:14px;">İşlem</th>
-				</tr>
-				</thead>
-				<tbody>
-				<tr th:each="f : ${files}">
-					<td style="padding:14px;" th:text="${f.originalName}">name</td>
-					<td style="padding:14px;" th:text="${f.contentType}">type</td>
-					<td style="padding:14px;" th:text="${#dates.format(f.createdAt, 'yyyy-MM-dd HH:mm')}">date</td>
-					<td style="padding:14px; text-align:right;">
-						<span style="display:inline-flex; gap:6px; align-items:center;">
-							<a class="btn btn-primary" th:href="@{'/study-files/files/' + ${f.id}}" style="padding:4px 10px; font-size:0.9rem;">Open</a>
-							<form th:action="@{'/study-files/files/' + ${f.id} + '/delete'}" method="post" style="display:inline;">
-								<button class="btn btn-danger" type="submit" style="padding:4px 10px; font-size:0.9rem;" onclick="return confirm('Delete this file?');">Delete</button>
-							</form>
-						</span>
-					</td>
-				</tr>
-				</tbody>
-			</table>
-		</section>
-
-		<section style="flex:1; min-width: 300px;">
-			<h2 style="margin-bottom: 8px;">Notlar</h2>
-			<div th:if="${#lists.isEmpty(notes)}" class="muted">Henüz not yok</div>
-			<table th:if="${!#lists.isEmpty(notes)}" style="width:100%; border-collapse: collapse;">
-				<thead>
-				<tr>
-					<th style="text-align:left; border-bottom:1px solid var(--border-color,#ddd); padding:14px;">Başlık</th>
-					<th style="text-align:left; border-bottom:1px solid var(--border-color,#ddd); padding:14px;">Güncellendi</th>
-					<th style="text-align:right; border-bottom:1px solid var(--border-color,#ddd); padding:14px;">İşlem</th>
-				</tr>
-				</thead>
-				<tbody>
-				<tr th:each="n : ${notes}">
-					<td style="padding:14px;" th:text="${n.title}">Note</td>
-					<td style="padding:14px;" th:text="${#dates.format(n.updatedAt, 'yyyy-MM-dd HH:mm')}">date</td>
-					<td style="padding:14px; text-align:right;">
+	<div style="border: 1px solid var(--border-color, #ddd); border-radius: 8px; overflow: hidden; overflow-x: auto;">
+		<div th:if="${#lists.isEmpty(files) && #lists.isEmpty(notes)}" class="muted" style="padding: 40px; text-align: center;">
+			Henüz dosya veya not yok
+		</div>
+		<table th:if="${!#lists.isEmpty(files) || !#lists.isEmpty(notes)}" style="width:100%; border-collapse: collapse;">
+			<thead>
+			<tr>
+				<th style="text-align:left; border-bottom:1px solid var(--border-color,#ddd); padding:14px 12px;">Tip</th>
+				<th style="text-align:left; border-bottom:1px solid var(--border-color,#ddd); padding:14px 12px;">Ad/Başlık</th>
+				<th style="text-align:left; border-bottom:1px solid var(--border-color,#ddd); padding:14px 12px;">Tür/Güncellendi</th>
+				<th style="text-align:left; border-bottom:1px solid var(--border-color,#ddd); padding:14px 12px;">Tarih</th>
+				<th style="text-align:right; border-bottom:1px solid var(--border-color,#ddd); padding:14px 12px;">İşlem</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr th:each="f : ${files}">
+				<td style="padding:12px;">📄 Dosya</td>
+				<td style="padding:12px;" th:text="${f.originalName}">name</td>
+				<td style="padding:12px;" th:text="${f.contentType}">type</td>
+				<td style="padding:12px;" th:text="${#dates.format(f.createdAt, 'yyyy-MM-dd HH:mm')}">date</td>
+				<td style="padding:12px; text-align:right;">
+					<span style="display:inline-flex; gap:6px; align-items:center;">
+						<a class="btn btn-primary" th:href="@{'/study-files/files/' + ${f.id}}" style="padding:4px 10px; font-size:0.9rem;">Open</a>
+						<form th:action="@{'/study-files/files/' + ${f.id} + '/delete'}" method="post" style="display:inline;">
+							<button class="btn btn-danger" type="submit" style="padding:4px 10px; font-size:0.9rem;" onclick="return confirm('Delete this file?');">Delete</button>
+						</form>
+					</span>
+				</td>
+			</tr>
+			<tr th:each="n : ${notes}">
+				<td style="padding:12px;">📝 Not</td>
+				<td style="padding:12px;" th:text="${n.title}">Note</td>
+				<td style="padding:12px;" class="muted">-</td>
+				<td style="padding:12px;" th:text="${#dates.format(n.updatedAt, 'yyyy-MM-dd HH:mm')}">date</td>
+				<td style="padding:12px; text-align:right;">
+					<span style="display:inline-flex; gap:6px; align-items:center;">
 						<a class="btn btn-primary" th:href="@{'/study-files/notes/' + ${n.id}}" style="padding:4px 10px; font-size:0.9rem;">Open</a>
 						<form th:action="@{'/study-files/notes/' + ${n.id} + '/delete'}" method="post" style="display:inline;">
-							<button class="btn btn-danger" type="submit" style="padding:4px 10px; font-size:0.9rem; margin-left:6px;" onclick="return confirm('Delete this note?');">Delete</button>
+							<button class="btn btn-danger" type="submit" style="padding:4px 10px; font-size:0.9rem;" onclick="return confirm('Delete this note?');">Delete</button>
 						</form>
-					</td>
-				</tr>
-				</tbody>
-			</table>
-		</section>
+					</span>
+				</td>
+			</tr>
+			</tbody>
+		</table>
 	</div>
 
 	<!-- Hidden forms and modal triggers -->

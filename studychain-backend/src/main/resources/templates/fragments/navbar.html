@@ -6,13 +6,19 @@
         <a th:href="${username} != null ? @{/home} : @{/}" class="brand">studychain</a>
     </div>
     <div class="navbar-right" th:if="${username} == null">
-        <button id="themeToggle" class="btn btn-ghost" type="button">🌙</button>
+        <button id="themeToggle" class="btn btn-ghost" type="button">
+            <img id="themeIcon" src="/images/icons/13-removebg-preview (1).png" alt="Theme" style="width: 24px; height: 24px; object-fit: contain;">
+        </button>
         <a class="btn btn-ghost" href="/auth/login">Login</a>
         <a class="btn btn-primary" href="/auth/signup">Sign up</a>
     </div>
     <div class="navbar-right" th:if="${username} != null">
-        <button id="themeToggle" class="btn btn-ghost" type="button">🌙</button>
-        <a class="btn btn-ghost" href="/settings" title="Settings" aria-label="Settings" style="padding: 4px 6px;">⚙️</a>
+        <button id="themeToggle" class="btn btn-ghost" type="button">
+            <img id="themeIcon" src="/images/icons/13-removebg-preview (1).png" alt="Theme" style="width: 24px; height: 24px; object-fit: contain;">
+        </button>
+        <a class="btn btn-ghost" href="/settings" title="Settings" aria-label="Settings" style="padding: 4px 6px;">
+            <img id="settingsIcon" src="/images/icons/11-removebg-preview (1).png" alt="Settings" style="width: 24px; height: 24px; object-fit: contain;">
+        </a>
 		<a class="btn btn-ghost" href="/profile" title="Profile" style="padding: 4px 6px;">
 			<img class="avatar" src="/profile/photo" alt="Profile"
 			     onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22 viewBox=%220 0 32 32%22&gt;&lt;defs&gt;&lt;linearGradient id=%22g%22 x1=%220%22 y1=%220%22 x2=%221%22 y2=%221%22&gt;&lt;stop offset=%220%25%22 stop-color=%22%23c9d6ff%22/&gt;&lt;stop offset=%22100%25%22 stop-color=%22%23e2e2e2%22/&gt;&lt;/linearGradient&gt;&lt;/defs&gt;&lt;circle cx=%2216%22 cy=%2216%22 r=%2216%22 fill=%22url(%23g)%22/&gt;&lt;circle cx=%2216%22 cy=%2212%22 r=%226%22 fill=%22%23ffffff%22 opacity=%220.9%22/&gt;&lt;path d=%22M4 28c3.5-5 9-7 12-7s8.5 2 12 7%22 stroke=%22%23ffffff%22 stroke-width=%222%22 fill=%22none%22 opacity=%220.7%22/&gt;&lt;/svg&gt;';">

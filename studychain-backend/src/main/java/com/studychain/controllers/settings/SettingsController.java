@@ -21,8 +21,7 @@ public class SettingsController {
 	}
 
 	@GetMapping("/settings")
-	public String settings(@RequestParam(value = "tab", required = false) String tab,
-	                       @RequestParam(value = "success", required = false) String success,
+	public String settings(@RequestParam(value = "success", required = false) String success,
 	                       @RequestParam(value = "error", required = false) String error,
 	                       HttpSession session,
 	                       Model model) {
@@ -44,7 +43,6 @@ public class SettingsController {
 		model.addAttribute("showBirthDatePublic", user.getShowBirthDatePublic() == null ? true : user.getShowBirthDatePublic());
 		model.addAttribute("showJoinedDatePublic", user.getShowJoinedDatePublic() == null ? true : user.getShowJoinedDatePublic());
 		model.addAttribute("about", user.getAbout() == null ? "" : user.getAbout());
-		if (tab != null) model.addAttribute("tab", tab);
 		if (success != null) model.addAttribute("success", success);
 		if (error != null) model.addAttribute("error", error);
 		return "settings/index";
@@ -55,12 +53,12 @@ public class SettingsController {
 		Long userId = (Long) session.getAttribute("userId");
 		if (userId == null) return "redirect:/auth/login";
 		if (!"dark".equals(theme) && !"light".equals(theme)) {
-			return "redirect:/settings?tab=application&error=Invalid+theme";
+			return "redirect:/settings?error=Invalid+theme";
 		}
 		return userRepository.findById(userId).map(user -> {
 			user.setThemePreference(theme);
 			userRepository.save(user);
-			return "redirect:/settings?tab=application&success=Theme+updated";
+			return "redirect:/settings?success=Theme+updated";
 		}).orElse("redirect:/auth/login");
 	}
 
@@ -70,17 +68,17 @@ public class SettingsController {
 		if (userId == null) return "redirect:/auth/login";
 		return userRepository.findById(userId).map(user -> {
 			if (email == null || email.isBlank()) {
-				return "redirect:/settings?tab=account&error=Email+is+required";
+				return "redirect:/settings?error=Email+is+required";
 			}
 			if (email.equals(user.getEmail())) {
-				return "redirect:/settings?tab=account&success=Email+unchanged";
+				return "redirect:/settings?success=Email+unchanged";
 			}
 			if (userRepository.existsByEmail(email)) {
-				return "redirect:/settings?tab=account&error=Email+is+already+in+use";
+				return "redirect:/settings?error=Email+is+already+in+use";
 			}
 			user.setEmail(email);
 			userRepository.save(user);
-			return "redirect:/settings?tab=account&success=Email+updated";
+			return "redirect:/settings?success=Email+updated";
 		}).orElse("redirect:/auth/login");
 	}
 
@@ -93,20 +91,20 @@ public class SettingsController {
 		if (userId == null) return "redirect:/auth/login";
 		return userRepository.findById(userId).map(user -> {
 			if (currentPassword == null || !currentPassword.equals(user.getPassword())) {
-				return "redirect:/settings?tab=account&error=Current+password+is+incorrect";
+				return "redirect:/settings?error=Current+password+is+incorrect";
 			}
 			if (newPassword == null || newPassword.length() < 4) {
-				return "redirect:/settings?tab=account&error=New+password+must+be+at+least+4+chars";
+				return "redirect:/settings?error=New+password+must+be+at+least+4+chars";
 			}
 			if (!newPassword.equals(confirmPassword)) {
-				return "redirect:/settings?tab=account&error=Passwords+do+not+match";
+				return "redirect:/settings?error=Passwords+do+not+match";
 			}
 			if (newPassword.equals(currentPassword)) {
-				return "redirect:/settings?tab=account&error=New+password+must+be+different";
+				return "redirect:/settings?error=New+password+must+be+different";
 			}
 			user.setPassword(newPassword); // Note: plain text for demo parity
 			userRepository.save(user);
-			return "redirect:/settings?tab=account&success=Password+updated";
+			return "redirect:/settings?success=Password+updated";
 		}).orElse("redirect:/auth/login");
 	}
 
@@ -118,15 +116,15 @@ public class SettingsController {
 		Long userId = (Long) session.getAttribute("userId");
 		if (userId == null) return "redirect:/auth/login";
 		if (username == null || username.isBlank() || firstName == null || firstName.isBlank() || lastName == null || lastName.isBlank()) {
-			return "redirect:/settings?tab=account&error=All+fields+are+required#account";
+			return "redirect:/settings?error=All+fields+are+required";
 		}
 		if (username.length() > 50 || firstName.length() > 80 || lastName.length() > 80) {
-			return "redirect:/settings?tab=account&error=Field+length+exceeded#account";
+			return "redirect:/settings?error=Field+length+exceeded";
 		}
 		return userRepository.findById(userId).map(user -> {
 			String currentUsername = user.getUsername();
 			if (!username.equals(currentUsername) && userRepository.existsByUsername(username)) {
-				return "redirect:/settings?tab=account&error=Username+is+already+taken#account";
+				return "redirect:/settings?error=Username+is+already+taken";
 			}
 			user.setUsername(username);
 			user.setFirstName(firstName);
@@ -134,7 +132,7 @@ public class SettingsController {
 			userRepository.save(user);
 			// keep session username in sync
 			session.setAttribute("username", username);
-			return "redirect:/settings?tab=account&success=Profile+updated#account";
+			return "redirect:/settings?success=Profile+updated";
 		}).orElse("redirect:/auth/login");
 	}
 
@@ -150,7 +148,7 @@ public class SettingsController {
 			user.setShowBirthDatePublic("on".equalsIgnoreCase(showBirthDate));
 			user.setShowJoinedDatePublic("on".equalsIgnoreCase(showJoinedDate));
 			userRepository.save(user);
-			return "redirect:/settings?tab=account&success=Visibility+settings+updated#account";
+			return "redirect:/settings?success=Visibility+settings+updated";
 		}).orElse("redirect:/auth/login");
 	}
 
@@ -160,11 +158,11 @@ public class SettingsController {
 		if (userId == null) return "redirect:/auth/login";
 		return userRepository.findById(userId).map(user -> {
 			if (about != null && about.length() > 2000) {
-				return "redirect:/settings?tab=account&error=About+is+too+long#account";
+				return "redirect:/settings?error=About+is+too+long";
 			}
 			user.setAbout(about == null ? "" : about);
 			userRepository.save(user);
-			return "redirect:/settings?tab=account&success=About+updated#account";
+			return "redirect:/settings?success=About+updated";
 		}).orElse("redirect:/auth/login");
 	}
 }

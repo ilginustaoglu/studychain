@@ -10,7 +10,7 @@
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 <main class="container" style="max-width: 920px; margin: 16px auto; padding: 0 12px;">
-	<a class="btn" href="/flashcards">← Collections</a>
+	<a class="btn" href="/flashcards" style="margin-bottom: 16px; display: inline-block;">← Collections</a>
 	<div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
 		<h1 th:text="${collection.name}" style="margin: 0;">Collection</h1>
 	</div>

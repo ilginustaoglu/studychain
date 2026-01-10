@@ -14,22 +14,10 @@
 	<h1 style="margin-bottom: 16px;">Settings</h1>
 	<p style="margin-bottom: 24px; opacity: 0.8;">Manage your profile photo, application preferences, and account.</p>
 
-	<div role="tablist" aria-label="Settings sections" style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
-		<button class="btn btn-primary" data-target="application" aria-selected="true" type="button">Application</button>
-		<button class="btn btn-ghost" data-target="account" aria-selected="false" type="button">Account</button>
-	</div>
-
 	<div th:if="${success != null}" class="muted" style="margin-bottom: 12px; color: #22c55e;" th:text="${success}"></div>
 	<div th:if="${error != null}" class="error" style="margin-bottom: 12px;" th:text="${error}"></div>
 
-	<section data-section="application" style="margin-bottom: 32px;">
-		<h2 style="margin-bottom: 12px;">Application</h2>
-		<!-- Intentionally left blank for now -->
-	</section>
-
-	<section data-section="account" class="hidden">
-		<h2 style="margin-bottom: 12px;">Account</h2>
-		<div style="display:grid; gap: 24px;">
+	<div style="display:grid; gap: 32px;">
 			<section>
 				<h3 style="margin-bottom: 8px;">Profile photo</h3>
 				<div style="display:flex; align-items:center; gap:16px;">
@@ -126,14 +114,7 @@
 				<button class="btn btn-primary" type="submit">Save About</button>
 			</form>
 		</div>
-	</section>
 </main>
-
-<script>
-	/* Pass selected tab from server (if any) to JS */
-	window.SC_SETTINGS_TAB = /*[[${tab}]]*/ '';
-</script>
-<script src="/js/settings.js"></script>
 </body>
 </html>
 
