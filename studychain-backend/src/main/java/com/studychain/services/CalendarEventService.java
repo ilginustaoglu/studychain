@@ -4,6 +4,8 @@ import com.studychain.models.CalendarEvent;
 import com.studychain.models.User;
 import com.studychain.repositories.CalendarEventRepository;
 import com.studychain.repositories.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,12 +16,17 @@ import java.util.Optional;
 @Service
 public class CalendarEventService {
 
+	private static final Logger log = LoggerFactory.getLogger(CalendarEventService.class);
+
 	private final CalendarEventRepository eventRepository;
 	private final UserRepository userRepository;
+	private final GoogleCalendarService googleCalendarService;
 
-	public CalendarEventService(CalendarEventRepository eventRepository, UserRepository userRepository) {
+	public CalendarEventService(CalendarEventRepository eventRepository, UserRepository userRepository,
+	                            GoogleCalendarService googleCalendarService) {
 		this.eventRepository = eventRepository;
 		this.userRepository = userRepository;
+		this.googleCalendarService = googleCalendarService;
 	}
 
 	public List<CalendarEvent> findAllByUserId(Long userId) {
@@ -27,6 +34,11 @@ public class CalendarEventService {
 	}
 
 	public List<CalendarEvent> findEventsInRange(Long userId, LocalDateTime start, LocalDateTime end) {
+		try {
+			googleCalendarService.syncRange(userId, start, end);
+		} catch (Exception ex) {
+			log.warn("Google Calendar sync failed for user {}: {}", userId, ex.getMessage());
+		}
 		return eventRepository.findAllByUser_IdAndStartTimeBetweenOrderByStartTimeAsc(userId, start, end);
 	}
 
@@ -51,7 +63,9 @@ public class CalendarEventService {
 			event.setEndTime(endTime);
 			event.setAllDay(allDay);
 			event.setColor(color != null ? color : "#6366f1");
-			return eventRepository.save(event);
+			CalendarEvent saved = eventRepository.save(event);
+			googleCalendarService.pushCreated(saved);
+			return saved;
 		});
 	}
 
@@ -68,13 +82,16 @@ public class CalendarEventService {
 			if (color != null) {
 				event.setColor(color);
 			}
-			return eventRepository.save(event);
+			CalendarEvent saved = eventRepository.save(event);
+			googleCalendarService.pushUpdated(saved);
+			return saved;
 		});
 	}
 
 	@Transactional
 	public boolean delete(Long userId, Long eventId) {
 		return findByIdAndUserId(eventId, userId).map(event -> {
+			googleCalendarService.deleteRemote(userId, event.getGoogleEventId(), event.getGoogleCalendarId());
 			eventRepository.delete(event);
 			return true;
 		}).orElse(false);

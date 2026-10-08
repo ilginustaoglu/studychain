@@ -39,6 +39,12 @@ public class CalendarEvent {
 	@Column(length = 20)
 	private String color = "#6366f1"; // Default primary color
 
+	@Column(name = "google_event_id", length = 512)
+	private String googleEventId;
+
+	@Column(name = "google_calendar_id", length = 512)
+	private String googleCalendarId;
+
 	public Long getId() {
 		return id;
 	}
@@ -97,6 +103,22 @@ public class CalendarEvent {
 
 	public void setColor(String color) {
 		this.color = color;
+	}
+
+	public String getGoogleEventId() {
+		return googleEventId;
+	}
+
+	public void setGoogleEventId(String googleEventId) {
+		this.googleEventId = googleEventId;
+	}
+
+	public String getGoogleCalendarId() {
+		return googleCalendarId;
+	}
+
+	public void setGoogleCalendarId(String googleCalendarId) {
+		this.googleCalendarId = googleCalendarId;
 	}
 }
 

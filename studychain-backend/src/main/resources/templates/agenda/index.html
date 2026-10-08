@@ -26,10 +26,10 @@
         .view-buttons {
             display: flex;
             gap: 4px;
-            border: 1px solid rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
             border-radius: 8px;
             overflow: hidden;
-            background: rgba(255, 255, 255, 0.5);
+            background: var(--surface);
             backdrop-filter: blur(10px);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
@@ -48,7 +48,7 @@
             font-weight: 500;
         }
         .view-btn:hover:not(.active) {
-            background: rgba(0, 0, 0, 0.05);
+            background: var(--surface-2);
             transform: translateY(-1px);
         }
         .calendar-nav {
@@ -61,7 +61,7 @@
             text-align: center;
             font-size: 18px;
             font-weight: 500;
-            color: rgba(0, 0, 0, 0.8);
+            color: var(--text);
             transition: all 0.2s ease;
         }
         .btn {
@@ -79,24 +79,24 @@
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 1px;
-            border: 1px solid rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border);
             border-radius: 12px;
             overflow: hidden;
-            background: rgba(0, 0, 0, 0.05);
+            background: var(--border);
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
         }
         .day-header {
-            background: rgba(255, 255, 255, 0.7);
+            background: var(--surface-2);
             backdrop-filter: blur(10px);
             padding: 12px 8px;
             text-align: center;
             font-weight: 600;
             font-size: 12px;
             text-transform: uppercase;
-            color: rgba(0, 0, 0, 0.6);
+            color: var(--muted);
         }
         .month-day {
-            background: rgba(255, 255, 255, 0.6);
+            background: var(--surface);
             backdrop-filter: blur(10px);
             min-height: 120px;
             padding: 8px;
@@ -105,14 +105,15 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .month-day:hover {
-            background: rgba(255, 255, 255, 0.9);
+            background: var(--surface-2);
             transform: scale(1.02);
             z-index: 1;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         .month-day.other-month {
             opacity: 0.4;
-            background: rgba(245, 245, 245, 0.5);
+            background: var(--bg);
+            color: var(--muted);
         }
         .month-day.today {
             background: rgba(99, 102, 241, 0.1);
@@ -120,7 +121,7 @@
         }
         .month-day.today .day-number {
             background: linear-gradient(135deg, var(--primary, #6366f1), rgba(99, 102, 241, 0.8));
-            color: white;
+            color: var(--primary-contrast);
             border-radius: 50%;
             width: 28px;
             height: 28px;
@@ -163,36 +164,36 @@
             display: grid;
             grid-template-columns: 60px repeat(7, 1fr);
             gap: 1px;
-            border: 1px solid rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border);
             border-radius: 12px;
             overflow: hidden;
-            background: rgba(0, 0, 0, 0.05);
+            background: var(--border);
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
         }
         .time-column {
-            background: rgba(255, 255, 255, 0.7);
+            background: var(--surface-2);
             backdrop-filter: blur(10px);
         }
         .time-slot {
             height: 60px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            border-bottom: 1px solid var(--border);
             padding: 4px 8px;
             font-size: 12px;
-            color: rgba(0, 0, 0, 0.5);
+            color: var(--muted);
         }
         .week-day-column {
-            background: rgba(255, 255, 255, 0.6);
+            background: var(--surface);
             backdrop-filter: blur(10px);
             position: relative;
             transition: all 0.2s ease;
         }
         .week-day-column:hover {
-            background: rgba(255, 255, 255, 0.8);
+            background: var(--surface-2);
         }
         .week-day-header {
             padding: 12px 8px;
             text-align: center;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            border-bottom: 1px solid var(--border);
         }
         .week-day-number {
             font-size: 24px;
@@ -201,7 +202,7 @@
         }
         .week-day-name {
             font-size: 12px;
-            color: rgba(0, 0, 0, 0.5);
+            color: var(--muted);
             text-transform: uppercase;
         }
         .week-day-column.today {
@@ -213,7 +214,7 @@
         }
         .week-time-slot {
             height: 60px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid var(--border);
             position: relative;
             transition: background 0.2s ease;
         }
@@ -244,25 +245,25 @@
             display: grid;
             grid-template-columns: 60px 1fr;
             gap: 1px;
-            border: 1px solid rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border);
             border-radius: 12px;
             overflow: hidden;
-            background: rgba(0, 0, 0, 0.05);
+            background: var(--border);
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
         }
         .day-time-column {
-            background: rgba(255, 255, 255, 0.7);
+            background: var(--surface-2);
             backdrop-filter: blur(10px);
         }
         .day-content-column {
-            background: rgba(255, 255, 255, 0.6);
+            background: var(--surface);
             backdrop-filter: blur(10px);
             position: relative;
         }
         .day-header-content {
             padding: 16px;
             text-align: center;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            border-bottom: 1px solid var(--border);
         }
         .day-header-number {
             font-size: 36px;
@@ -271,7 +272,7 @@
         }
         .day-header-name {
             font-size: 14px;
-            color: rgba(0, 0, 0, 0.5);
+            color: var(--muted);
             text-transform: uppercase;
         }
         /* Event Modal */
@@ -295,7 +296,9 @@
             opacity: 1;
         }
         .modal-content {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
             backdrop-filter: blur(20px);
             border-radius: 16px;
             padding: 24px;
@@ -329,11 +332,12 @@
         .form-group textarea {
             width: 100%;
             padding: 10px 12px;
-            border: 1px solid rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
             border-radius: 8px;
             font-size: 14px;
             box-sizing: border-box;
-            background: rgba(255, 255, 255, 0.8);
+            background: var(--bg);
+            color: var(--text);
             backdrop-filter: blur(5px);
             transition: all 0.2s ease;
         }
@@ -342,7 +346,7 @@
             outline: none;
             border-color: var(--primary, #6366f1);
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--bg);
         }
         .form-group textarea {
             resize: vertical;
@@ -372,7 +376,7 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
         .color-option.selected {
-            border-color: rgba(0, 0, 0, 0.3);
+            border-color: var(--text);
             transform: scale(1.15);
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
         }
@@ -384,7 +388,43 @@
         }
         .btn-create {
             background: var(--primary, #6366f1);
-            color: white;
+            color: var(--primary-contrast);
+        }
+        .google-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            background: rgba(66, 133, 244, 0.08);
+            border: 1px solid rgba(66, 133, 244, 0.25);
+        }
+        .google-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-left: auto;
+            flex-wrap: wrap;
+        }
+        .google-actions form {
+            margin: 0;
+        }
+        a.btn {
+            text-decoration: none;
+            display: inline-block;
+        }
+        .google-hint, .google-banner {
+            font-size: 14px;
+            color: var(--text);
+        }
+        .google-sync-note {
+            display: none;
+            margin: 0 0 12px;
+            font-size: 13px;
+            color: var(--primary);
         }
     </style>
 </head>
@@ -406,6 +446,42 @@
         </div>
     </div>
 
+    <div class="google-bar">
+        <div>
+            <strong>Google Calendar</strong>
+            <div th:if="${googleMessage}" class="google-banner" th:text="${googleMessage}"></div>
+            <div th:if="${googleConnected and !googleScopeMissing and !googleColorScopeMissing}" class="google-hint">
+                Connected<span th:if="${googleEmail != null}"> as <span th:text="${googleEmail}"></span></span>.
+                Changes here and in Google Calendar stay in sync.
+            </div>
+            <div th:if="${googleColorScopeMissing}" class="google-hint">
+                Connected<span th:if="${googleEmail != null}"> as <span th:text="${googleEmail}"></span></span>.
+                To use each calendar's own color, add
+                https://www.googleapis.com/auth/calendar.calendarlist.readonly
+                under Acceso a los datos, save, then grant access again.
+            </div>
+            <div th:if="${googleScopeMissing}" class="google-hint">
+                Signed in<span th:if="${googleEmail != null}"> as <span th:text="${googleEmail}"></span></span>,
+                but Calendar permission is missing, so existing events were not imported.
+                In Google Cloud open Acceso a los datos, add
+                https://www.googleapis.com/auth/calendar.events, save, then grant access again.
+            </div>
+            <div th:if="${!googleConnected and googleConfigured}" class="google-hint">
+                Sign in with Google to show this agenda on your Google Calendar.
+            </div>
+            <div th:if="${!googleConfigured}" class="google-hint">
+                Add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET, then restart the app.
+            </div>
+        </div>
+        <div class="google-actions">
+            <a th:if="${(!googleConnected or googleScopeMissing or googleColorScopeMissing) and googleConfigured}" class="btn btn-primary" href="/agenda/google/connect">Connect Google Calendar</a>
+            <form th:if="${googleConnected}" method="post" action="/agenda/google/disconnect"
+                  onsubmit="return confirm('Disconnect Google Calendar? Events already in StudyChain stay here.');">
+                <button type="submit" class="btn btn-ghost">Disconnect</button>
+            </form>
+        </div>
+    </div>
+
     <div id="calendarContainer"></div>
 </main>
 
@@ -417,6 +493,7 @@
             <button id="closeModal" class="btn btn-ghost" style="padding: 4px 8px;">×</button>
         </div>
         <form id="eventForm">
+            <p id="googleSyncNote" class="google-sync-note">Synced with Google Calendar</p>
             <input type="hidden" id="eventId">
             <div class="form-group">
                 <label>Title *</label>
@@ -575,11 +652,14 @@
             dayEventsList.forEach(event => {
                 const chip = document.createElement('div');
                 chip.className = 'event-chip';
-                chip.style.background = event.color + '15';
-                chip.style.color = event.color;
+                chip.style.background = event.color + '55';
+                chip.style.color = 'var(--text)';
                 chip.style.borderLeftColor = event.color;
                 chip.style.fontWeight = '500';
                 chip.textContent = event.title;
+                if (event.googleEventId) {
+                    chip.title = 'Synced with Google Calendar';
+                }
                 chip.addEventListener('click', (e) => {
                     e.stopPropagation();
                     openEventModal(null, event);
@@ -658,8 +738,8 @@
                 eventEl.className = 'week-event';
                 eventEl.style.top = `${startHour * 60}px`;
                 eventEl.style.height = `${Math.max(duration * 60, 20)}px`;
-                eventEl.style.background = event.color + '15';
-                eventEl.style.color = event.color;
+                eventEl.style.background = event.color + '55';
+                eventEl.style.color = 'var(--text)';
                 eventEl.style.borderLeftColor = event.color;
                 eventEl.style.fontWeight = '500';
                 eventEl.textContent = event.title;
@@ -723,8 +803,8 @@
                 eventEl.className = 'week-event';
                 eventEl.style.top = `${startHour * 60}px`;
                 eventEl.style.height = `${Math.max(duration * 60, 20)}px`;
-                eventEl.style.background = event.color + '15';
-                eventEl.style.color = event.color;
+                eventEl.style.background = event.color + '55';
+                eventEl.style.color = 'var(--text)';
                 eventEl.style.borderLeftColor = event.color;
                 eventEl.style.fontWeight = '500';
                 eventEl.textContent = event.title;
@@ -766,6 +846,8 @@
         });
         
         deleteBtn.style.display = event ? 'block' : 'none';
+        const syncNote = document.getElementById('googleSyncNote');
+        syncNote.style.display = event && event.googleEventId ? 'block' : 'none';
         modal.classList.add('active');
     }
     
@@ -792,6 +874,8 @@
             if (response.ok) {
                 modal.classList.remove('active');
                 loadEvents();
+            } else {
+                alert('Could not save the event.');
             }
         } catch (err) {
             console.error('Failed to save event', err);
@@ -807,6 +891,8 @@
             if (response.ok) {
                 modal.classList.remove('active');
                 loadEvents();
+            } else {
+                alert('Could not delete the event. If Google Calendar is connected, reconnect and try again.');
             }
         } catch (err) {
             console.error('Failed to delete event', err);
